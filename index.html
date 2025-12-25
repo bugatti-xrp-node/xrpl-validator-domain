@@ -7,8 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0f1014;
-            --card-bg: rgba(30, 32, 40, 0.6);
+            --bg: #050505; /* Deepest black for background */
+            /* UPDATED: Lighter, more opaque background for the main window to create contrast */
+            --card-bg: rgba(22, 27, 34, 0.95); 
             --accent: #00aae4; /* XRP Blue */
             --accent-glow: rgba(0, 170, 228, 0.6);
             --text-main: #ffffff;
@@ -16,7 +17,8 @@
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
-            --border: rgba(255, 255, 255, 0.1);
+            /* UPDATED: Brighter border to define edges */
+            --border: rgba(255, 255, 255, 0.15);
         }
 
         body {
@@ -41,7 +43,8 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            filter: blur(1px); 
+            /* Blur the background slightly more to push it back visually */
+            filter: blur(2px); 
         }
 
         /* --- CRT Scanline Overlay --- */
@@ -61,7 +64,7 @@
             background-size: 100% 4px;
             pointer-events: none;
             z-index: 2;
-            opacity: 0.6;
+            opacity: 0.4; /* Reduced opacity so it doesn't wash out the dashboard */
         }
 
         .scan-bar {
@@ -83,14 +86,21 @@
         /* --- Dashboard Container --- */
         .dashboard {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            /* Keep the blur but rely on opacity for contrast */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: 24px;
             width: 100%;
             max-width: 800px;
             padding: 40px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            
+            /* UPDATED: Stronger shadow + Subtle Blue Rim Light to pop against black bg */
+            box-shadow: 
+                0 0 0 1px rgba(255, 255, 255, 0.05), /* Inner rim */
+                0 20px 50px rgba(0,0,0, 0.8),         /* Deep drop shadow */
+                0 0 30px rgba(0, 170, 228, 0.1);      /* Blue glow */
+            
             animation: fadeIn 0.8s ease-out;
             position: relative;
             z-index: 10;
@@ -158,7 +168,8 @@
         }
 
         .card {
-            background: rgba(255,255,255,0.03);
+            /* UPDATED: Darker inner cards for depth against the main dashboard */
+            background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border);
             padding: 15px;
             border-radius: 12px;
@@ -188,7 +199,6 @@
             font-size: 1rem; 
             font-weight: 600; 
             white-space: nowrap;
-            /* Default handling for standard cards */
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -196,21 +206,19 @@
         .card-value.mono { font-family: 'JetBrains Mono', monospace; letter-spacing: -0.5px; }
 
         /* --- TICKER ANIMATION (OPTION 2) --- */
-        /* Used specifically for the Domain card */
         .ticker-wrap {
             width: 100%;
             overflow: hidden;
             white-space: nowrap;
             position: relative;
-            /* Fade edges slightly to make the scroll look cleaner */
             mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
             -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
         }
 
         .ticker-text {
             display: inline-block;
-            padding-left: 100%; /* Start from the right side */
-            animation: marquee 12s linear infinite; /* Slow scroll */
+            padding-left: 100%;
+            animation: marquee 12s linear infinite;
             color: var(--text-main);
             font-weight: 600;
         }
@@ -220,7 +228,6 @@
             100% { transform: translate(-100%, 0); }
         }
 
-        /* Loading Animation */
         .loading-pulse {
             animation: textPulse 1.5s infinite ease-in-out;
             color: var(--text-muted);
@@ -262,7 +269,6 @@
         .btn-secondary { background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border); }
         .btn-secondary:hover { background: rgba(255,255,255,0.1); }
 
-        /* Responsive Fixes */
         @media (max-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 480px) { 
             .grid { grid-template-columns: 1fr; } 
@@ -301,7 +307,6 @@
                 <span class="card-label">Software</span>
                 <div class="card-value loading-pulse" id="server-version">Loading...</div>
             </div>
-            
             <div class="card">
                 <span class="card-label">Domain</span>
                 <div class="ticker-wrap">
@@ -351,7 +356,6 @@
     </div>
 
     <script>
-        // --- REAL API DATA FETCHING ---
         const VALIDATOR_PUBKEY = 'nHUnzYnoC5LzfxjWrm5RjyhXiWs74NF9sA6MUyiioxr6ejLzB68d';
         const API_URL = `https://api.xrpscan.com/api/v1/validator/${VALIDATOR_PUBKEY}`;
 
@@ -362,7 +366,6 @@
                 
                 const data = await response.json();
                 
-                // 1. Agreement Score Fix (Handle Object vs Number)
                 const scoreEl = document.getElementById('agreement-score');
                 let scoreVal = null;
 
@@ -384,19 +387,16 @@
                 }
                 scoreEl.classList.remove('loading-pulse');
 
-                // 2. Software Version
                 const versionEl = document.getElementById('server-version');
                 const version = data.version || data.server_version || 'Unknown';
                 versionEl.innerText = version;
                 versionEl.classList.remove('loading-pulse');
 
-                // 3. Domain Name (With Ticker)
                 const domainEl = document.getElementById('verified-domain');
                 const domain = data.domain || 'Unverified';
                 domainEl.innerText = domain;
                 domainEl.classList.remove('loading-pulse');
 
-                // 4. UNL Status
                 const unlEl = document.getElementById('unl-status');
                 if (data.unl === true || data.unl === 'Active' || (data.unl && data.unl !== 'false')) {
                     unlEl.innerText = 'Active UNL';
@@ -405,7 +405,6 @@
                     unlEl.innerText = 'Verified Node'; 
                 }
 
-                // 5. Update Status Pill
                 const statusPill = document.getElementById('node-status');
                 if (data.chain === 'main') {
                     statusPill.innerHTML = '<div class="pulse"></div> OPERATIONAL';
@@ -414,7 +413,6 @@
                     statusPill.style.background = 'rgba(16, 185, 129, 0.1)';
                 }
                 
-                // 6. Sync Ledger Index from API (overwrites estimate)
                 if (data.ledger_index) {
                      currentLedger = parseInt(data.ledger_index);
                 }
@@ -426,10 +424,8 @@
             }
         }
 
-        // Initialize Fetch
         fetchValidatorData();
 
-        // --- Smart Fallback Ledger Simulation ---
         const ANCHOR_LEDGER = 101115000;
         const ANCHOR_TIME = new Date('2025-12-24T00:00:00Z').getTime();
         const AVG_CLOSE_TIME_MS = 3900; 
@@ -454,7 +450,6 @@
         }
         setTimeout(updateLedger, 3000);
 
-        // --- Copy Functionality ---
         function copyKey() {
             const keyText = document.getElementById('pubkey').innerText;
             navigator.clipboard.writeText(keyText).then(() => {
@@ -466,7 +461,6 @@
             });
         }
 
-        // --- Background Animation (Optimized) ---
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
