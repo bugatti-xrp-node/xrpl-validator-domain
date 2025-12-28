@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tachyon XRP Validator | Official Node</title>
+    <title>Tachyon XRPL Validator | Official Node</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* --- GLOBAL RESET --- */
@@ -198,7 +198,7 @@
     <div class="dashboard">
         <div class="header">
             <div class="brand">
-                <h1 class="glitch-text" data-text="TachyonXrpValidator"><span>Tachyon</span>Xrp<span>Validator</span></h1>
+                <h1 class="glitch-text" data-text="TachyonXrplValidator"><span>Tachyon</span>Xrpl<span>Validator</span></h1>
             </div>
             <div class="header-controls">
                 <button class="refresh-btn" onclick="fetchValidatorData()">
@@ -240,7 +240,7 @@
             </div>
              <div class="card">
                 <span class="card-label">Network</span>
-                <div class="card-value" id="network-name">XRP Mainnet</div>
+                <div class="card-value" id="network-name">XRPL Mainnet</div>
             </div>
             <div class="card">
                 <span class="card-label">Software</span>
@@ -286,7 +286,7 @@
         </div>
 
         <div style="margin-top: 30px; text-align: center; color: var(--text-muted); font-size: 0.8rem;">
-            Contact: tachyon-xrp-validator@proton.me
+            Contact: tachyon-xrpl-validator@proton.me
         </div>
     </div>
 
@@ -384,7 +384,7 @@
                 if (data.reserve_base) {
                     const xrpValue = parseInt(data.reserve_base) / 1000000;
                     reserveEl.innerText = xrpValue + ' XRP';
-                } else reserveEl.innerText = '20 XRP';
+                } else reserveEl.innerText = '1 XRP';
                 reserveEl.classList.remove('loading-pulse');
 
                 // Fee Vote
