@@ -3,5 +3,5 @@ public_key = "nHUnzYnoC5LzfxjWrm5RjyhXiWs74NF9sA6MUyiioxr6ejLzB68d"
 attestation="20B55DB11024D9C51FD3711067EEB5119256D40C5E7A6D52DA81ACB800281C70F73BE03EE6FC518FF5D0E187007B274ACD82C6C0FC2AEFBCA6BE85FF696C7602"
 
 [[PRINCIPALS]]
-name = "Tachyon Xrp Validator (US-East)"
-email = "tachyon-xrp-validator@proton.me"
+name = "Tachyon Xrpl Validator (US-East)"
+email = "tachyon-xrpl-validator@proton.me"
